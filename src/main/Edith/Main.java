@@ -34,26 +34,29 @@ public class Main {
     public void listTasks() {
         System.out.println("Here are the tasks in your list: ");
         int serialNumber=0;
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             serialNumber++;
             System.out.println(serialNumber + "." + task.toString());
         }
         printHorizontalLine();
     }
 
+    public void getNumberOfTasks() {
+        System.out.println("Now you have " + tasks.size() + " tasks in the list");
+    }
 
     public void changeTaskStatus(String enteredString) {
         int taskNumber= Integer.parseInt(enteredString.substring(enteredString.length()-1));
-        if(!isValidTaskNumber(taskNumber)) {
+        if (!isValidTaskNumber(taskNumber)) {
             System.out.println("Invalid task number. Please try again.");
             printHorizontalLine();
             return;
         }
 
         Task currentTask = tasks.get(taskNumber-1);
-        if(enteredString.contains("unmark")) {
+        if (enteredString.contains("unmark")) {
             unmarkTask(currentTask);
-        } else if(enteredString.contains("mark")) {
+        } else if (enteredString.contains("mark")) {
             markTask(currentTask);
         }
         printHorizontalLine();
@@ -116,21 +119,38 @@ public class Main {
         tasks.add(newTask);
         System.out.println("Got it. I've added this task: ");
         System.out.println(newTask);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list");
+        getNumberOfTasks();
         printHorizontalLine();
+    }
+
+    public void deleteTask(String enteredString) {
+        String taskNumberString = enteredString.substring("delete".length()+1, "delete".length()+2);
+        int taskNumber = Integer.parseInt(taskNumberString);
+        if (isValidTaskNumber(taskNumber)) {
+            Task task = tasks.remove(taskNumber);
+            System.out.println("Noted. I've removed this task:");
+            System.out.println(task);
+        } else {
+            System.out.println("Invalid task number. Please try again.");
+        }
+        getNumberOfTasks();
+        printHorizontalLine();
+
     }
     public void talkToUser() {
         giveIntroduction();
         do {
             String enteredString= sc.nextLine();
             printHorizontalLine();
-            if(enteredString.equals("bye")) {
+            if (enteredString.equals("bye")) {
                 sayGoodbye();
                 break;
-            } else if(enteredString.equals("list")) {
+            } else if (enteredString.equals("list")) {
                 listTasks();
-            } else if(enteredString.contains("mark")) {
+            } else if (enteredString.contains("mark")) {
                 changeTaskStatus(enteredString);
+            } else if (enteredString.contains("delete")) {
+                deleteTask(enteredString);
             } else {
                 addNewTask(enteredString);
             }
